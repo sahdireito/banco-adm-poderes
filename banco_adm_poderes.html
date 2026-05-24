@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Questões OAB — Direito Administrativo: Poderes da Administração</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f1eb;min-height:100vh;padding:2rem 1rem;color:#1a1a1a}
+.page-header{max-width:780px;margin:0 auto 2rem}
+.tema-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:#00304a;color:#fff;border-radius:5px;padding:4px 12px;margin-bottom:.75rem}
+.page-title{font-size:26px;font-weight:800;color:#1a1a1a;line-height:1.2;margin-bottom:.4rem}
+.page-sub{font-size:14px;color:#888}
+.score-bar{max-width:780px;margin:0 auto 1.5rem;background:#fff;border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1.5rem;box-shadow:0 1px 6px rgba(0,0,0,.06);flex-wrap:wrap}
+.score-item{text-align:center}
+.score-num{font-size:22px;font-weight:800;color:#1a1a1a;line-height:1}
+.score-label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.score-num.acertos{color:#3B6D11}.score-num.erros{color:#A32D2D}
+.progress-wrap{flex:1;min-width:120px}
+.progress-track{background:#ede9e0;border-radius:99px;height:8px;overflow:hidden}
+.progress-fill{background:#00304a;height:8px;border-radius:99px;transition:width .4s ease;width:0}
+.progress-label{font-size:12px;color:#aaa;margin-top:4px}
+.nav-wrap{max-width:780px;margin:0 auto 1.5rem;display:flex;flex-wrap:wrap;gap:6px}
+.nav-btn{width:38px;height:38px;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:13px;font-weight:600;color:#888;cursor:pointer;transition:all .15s;font-family:inherit;display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{border-color:#005580;color:#00304a}
+.nav-btn.active{border-color:#00304a;background:#00304a;color:#fff}
+.nav-btn.correto{border-color:#639922;background:#EAF3DE;color:#3B6D11}
+.nav-btn.errado{border-color:#E24B4A;background:#FCEBEB;color:#A32D2D}
+.container{max-width:780px;margin:0 auto}
+.q-card{background:#fff;border-radius:16px;padding:2rem;box-shadow:0 2px 12px rgba(0,0,0,.07);display:none;animation:fadeIn .2s ease}
+.q-card.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.q-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.q-num{font-size:12px;font-weight:700;background:#daeaf4;color:#00304a;border-radius:5px;padding:4px 10px}
+.q-exame{font-size:12px;color:#aaa}
+.q-titulo{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:1rem;line-height:1.35}
+.enunciado{font-size:14px;line-height:1.8;color:#444;border-left:3px solid #00304a;padding:.875rem 1rem;margin-bottom:1.25rem;background:#faf9f7;border-radius:0 8px 8px 0}
+.comando{font-size:14px;font-weight:700;color:#00304a;margin-bottom:1rem}
+.alternativas{display:flex;flex-direction:column;gap:9px;margin-bottom:1.25rem}
+.alt-btn{display:flex;align-items:flex-start;gap:13px;background:#f8f7f4;border:1.5px solid #e5e2d9;border-radius:10px;padding:13px 15px;cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .1s;width:100%;font-family:inherit}
+.alt-btn:hover:not(:disabled){border-color:#005580;background:#daeaf4;transform:translateX(2px)}
+.alt-btn:disabled{cursor:default}
+.alt-letter{font-size:12px;font-weight:700;color:#aaa;width:22px;height:22px;min-width:22px;border-radius:50%;border:1.5px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.alt-text{font-size:14px;line-height:1.65;color:#333}
+.alt-btn.correct{background:#EAF3DE;border-color:#639922}
+.alt-btn.correct .alt-letter{background:#639922;border-color:#639922;color:#fff}
+.alt-btn.correct .alt-text{color:#27500A;font-weight:600}
+.alt-btn.wrong{background:#FCEBEB;border-color:#E24B4A}
+.alt-btn.wrong .alt-letter{background:#E24B4A;border-color:#E24B4A;color:#fff}
+.alt-btn.wrong .alt-text{color:#791F1F}
+.feedback{display:none;border-radius:10px;padding:1rem 1.25rem;font-size:14px;line-height:1.75;margin-bottom:1rem}
+.feedback.show{display:block}
+.feedback.acerto{background:#EAF3DE;border:1px solid #97C459;color:#27500A}
+.feedback.erro{background:#FCEBEB;border:1px solid #F09595;color:#791F1F}
+.fundamento-box{display:none;border-radius:10px;padding:1rem 1.25rem;font-size:13px;line-height:1.8;color:#001f30;border-left:3px solid #00304a;background:#daeaf4;margin-bottom:1rem}
+.fundamento-box.show{display:block}
+.fundamento-box h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#00304a;margin-bottom:.6rem}
+.caqui-box{display:none;border-radius:10px;padding:1rem 1.25rem;font-size:13px;line-height:1.8;color:#5a3e00;border-left:3px solid #e8a000;background:#fff8e6;margin-bottom:1rem}
+.caqui-box.show{display:block}
+.caqui-box h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#b87300;margin-bottom:.6rem}
+.card-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:.5rem}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:transparent;border:1.5px solid #ddd;border-radius:8px;padding:7px 16px;font-size:13px;font-family:inherit;color:#666;cursor:pointer;transition:all .15s;display:none}
+.btn.show{display:inline-flex;align-items:center;gap:5px}
+.btn.azul{border-color:#005580;color:#00304a}.btn.azul:hover{background:#daeaf4}
+.btn.caqui{border-color:#e8a000;color:#b87300}.btn.caqui:hover{background:#fff8e6}
+.status-text{font-size:12px;color:#aaa;font-style:italic}
+.pagination{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;gap:10px}
+.pg-btn{background:#fff;border:1.5px solid #ddd;border-radius:9px;padding:9px 20px;font-size:14px;font-weight:600;font-family:inherit;color:#555;cursor:pointer;transition:all .15s}
+.pg-btn:hover{border-color:#00304a;color:#00304a}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-btn.primary{background:#00304a;border-color:#00304a;color:#fff}
+.pg-btn.primary:hover{background:#001f30}
+.pg-info{font-size:13px;color:#aaa}
+@media(max-width:600px){body{padding:1rem .75rem}.q-card{padding:1.25rem}.page-title{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <span class="tema-badge">📌 Banco de Questões OAB — Administrativo</span>
+  <h1 class="page-title">Direito Administrativo — Poderes da Administração</h1>
+  <p class="page-sub">11 questões — Exames de Ordem 2010 a 2024</p>
+</div>
+<div class="score-bar">
+  <div class="score-item"><div class="score-num" id="sc-total">0</div><div class="score-label">Respondidas</div></div>
+  <div class="score-item"><div class="score-num acertos" id="sc-acertos">0</div><div class="score-label">Acertos</div></div>
+  <div class="score-item"><div class="score-num erros" id="sc-erros">0</div><div class="score-label">Erros</div></div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">0 de 11 respondidas</div>
+  </div>
+</div>
+<div class="nav-wrap" id="nav-wrap"></div>
+<div class="container" id="questions-container"></div>
+<div class="container">
+  <div class="pagination">
+    <button class="pg-btn" id="btn-prev" onclick="navPage(-1)">← Anterior</button>
+    <span class="pg-info" id="pg-info">1 de 11</span>
+    <button class="pg-btn primary" id="btn-next" onclick="navPage(1)">Próxima →</button>
+  </div>
+</div>
+<script>
+const QUESTOES = [
+  {num:1, exame:"XLI Exame — 2024", titulo:"Desvio de Finalidade na Desapropriação", enunciado:"O Município Alfa editou decreto expropriatório por utilidade pública de imóvel pertencente a Constância, sob o fundamento de que o bem seria necessário para construção de escola. Constância recusou acordo administrativo porque possui provas robustas de que, na realidade, o objetivo da desapropriação seria vingança pessoal de Rosalvo, atual prefeito e seu ex-cônjuge. Diante da ausência de acordo, o Município ajuizou ação de desapropriação.", comando:"Considerando estritamente os fatos narrados, assinale a afirmativa correta.", gabarito:"C", alt:{"A": "A desapropriação não apresenta qualquer vício, considerando que o motivo invocado no decreto é válido, independentemente de Rosalvo ter dela se utilizado para fins de vingança.", "B": "Em contestação na ação de desapropriação, Constância pode invocar qualquer matéria de fato ou de direito, permitindo ao Judiciário verificar a existência ou não da utilidade pública.", "C": "A utilização da desapropriação por Rosalvo para se vingar da ex-cônjuge constitui desvio de finalidade, vício insanável que deverá ser alegado em ação própria, pois a contestação na desapropriação só pode versar sobre vício processual ou impugnação do preço.", "D": "O Município não poderia ajuizar ação de desapropriação, pois ela depende obrigatoriamente de acordo administrativo prévio."}, fb:{"A": "Incorreta. A finalidade pessoal do prefeito contamina o ato — desvio de finalidade é vício insanável que invalida o ato administrativo, independentemente de o motivo formal ser válido.", "B": "Incorreta. O art. 20 do Decreto-Lei 3.365/1941 limita a contestação na ação de desapropriação a vício processual ou impugnação do preço. Questões como desvio de finalidade devem ser tratadas em ação autônoma.", "C": "Correta! Há desvio de finalidade (desvio de poder): o prefeito usou competência formalmente legítima para fins pessoais. Trata-se de vício insanável. Porém, como a contestação na desapropriação é limitada (art. 20, DL 3.365/1941), Constância deve alegar o vício em ação própria — não dentro da contestação expropriatória.", "D": "Incorreta. A ação judicial de desapropriação existe exatamente para os casos em que não há acordo administrativo — não é requisito prévio obrigatório."}, fund:"Art. 20, DL 3.365/1941: a contestação na ação de desapropriação só pode versar sobre vício do processo judicial ou impugnação do preço. Princípio da finalidade: o ato administrativo deve sempre atender ao interesse público — desvio de finalidade é vício insanável.", caqui:"Esse caso mistura dois temas que a banca adora combinar: desvio de finalidade E limites da contestação na desapropriação. Rosalvo usou o poder expropriatório para vingança pessoal = desvio de finalidade = vício insanável. MAS — e aqui está a pegadinha — Constância não pode levantar isso na contestação da ação de desapropriação, que é limitada a preço e vício processual. O caminho é uma ação autônoma (ação popular, mandado de segurança, ação ordinária)."},
+  {num:2, exame:"XXX Exame — 2019", titulo:"Poder de Polícia Administrativa — Construção Irregular", enunciado:"Após comprar um terreno, Roberto iniciou a construção de sua casa sem licença, avançando além dos limites de sua propriedade e ocupando parcialmente a via pública, inclusive com risco de desabamento e perigo à integridade dos pedestres. No exercício da fiscalização da ocupação do solo urbano, o poder público municipal, observadas as formalidades legais, determinou que Roberto demolisse a parte irregular da obra.", comando:"O poder administrativo que fundamentou a determinação do Município é o poder", gabarito:"D", alt:{"A": "De hierarquia, e, pelo atributo da coercibilidade, o particular é obrigado a obedecer às ordens emanadas pelos agentes públicos, que estão em nível de superioridade hierárquica e podem usar meios indiretos de coerção para fazer valer a supremacia do interesse público sobre o privado.", "B": "Disciplinar, e o particular está sujeito às sanções impostas pela Administração Pública, em razão do atributo da imperatividade, desde que haja prévia e imprescindível chancela do Poder Judiciário.", "C": "Regulamentar, e os agentes públicos estão autorizados a realizar atos concretos para aplicar a lei, ainda que tenham que se valer da autoexecutoriedade, independentemente de ordem judicial.", "D": "De polícia, e a fiscalização apresenta duplo aspecto: preventivo e repressivo, aplicando sanções diante da transgressão da norma de polícia."}, fb:{"A": "Incorreta. Poder hierárquico regula a relação interna entre órgãos e agentes públicos — não entre o Estado e o particular.", "B": "Incorreta. Poder disciplinar incide sobre servidores e particulares com vínculo especial com a Administração. Além disso, não depende de autorização judicial prévia.", "C": "Incorreta. Poder regulamentar consiste na edição de atos normativos gerais (decretos, regulamentos) — não em atos concretos de fiscalização urbana.", "D": "Correta! Poder de polícia: restringe direitos e liberdades individuais em prol do interesse coletivo. Tem aspecto preventivo (licença, fiscalização) e repressivo (embargo, multa, demolição). Art. 78 do CTN."}, fund:"Art. 78, CTN: poder de polícia é a atividade da Administração que limita ou disciplina direito, interesse ou liberdade em razão do interesse público. Tem atributos de discricionariedade (em regra), autoexecutoriedade e coercibilidade.", caqui:"Poder de polícia é o poder de limitar o particular em prol do coletivo. Tem dois aspectos: preventivo (exige licença antes de construir) e repressivo (embarga e multa quem construiu irregular). A banca adora confundir com poder hierárquico — que é relação interna — e poder disciplinar — que é punir servidor. Aqui é fiscalização urbanística de particular = poder de polícia."},
+  {num:3, exame:"XXX Exame — 2019", titulo:"Teoria dos Motivos Determinantes — Exoneração de Cargo em Comissão", enunciado:"José, servidor público federal ocupante exclusivamente de cargo em comissão, foi exonerado, tendo a autoridade competente motivado o ato em reiterado descumprimento da carga horária de trabalho pelo servidor. José obteve documento oficial demonstrando o regular cumprimento de sua jornada de trabalho.", comando:"Assim, o servidor buscou assistência jurídica e foi corretamente informado de que", gabarito:"C", alt:{"A": "Não é viável ação judicial para invalidar o ato, pois cargo em comissão é de livre nomeação e exoneração, sem vinculação aos motivos apresentados.", "B": "Não é viável ação judicial porque o ato é vinculado e o Judiciário não pode controlar mérito administrativo.", "C": "É viável ação judicial para invalidar o ato, pois, embora a exoneração seja ato discricionário e dispensável de motivação, uma vez indicados os motivos, eles vinculam a Administração, em razão da teoria dos motivos determinantes.", "D": "É viável ação judicial porque, sendo ato vinculado, o Judiciário pode examinar conveniência e oportunidade do mérito administrativo."}, fb:{"A": "Incorreta. A exoneração de cargo em comissão é discricionária e nem precisa ser motivada — mas a Administração resolveu motivar. Uma vez motivado o ato, os motivos vinculam a Administração. Se os motivos são falsos, o ato é inválido.", "B": "Incorreta. A exoneração de cargo em comissão NÃO é ato vinculado — é discricionário. E o Judiciário controla legalidade, não mérito.", "C": "Correta! Teoria dos motivos determinantes: quando a Administração apresenta os motivos do ato, ela fica vinculada à veracidade deles. Se os motivos são inexistentes ou falsos, o ato é inválido — mesmo que o ato fosse dispensado de motivação. José prova que cumpriu a jornada = motivo falso = ato anulável.", "D": "Incorreta. O Judiciário não examina conveniência e oportunidade (mérito administrativo) — só legalidade. E o ato não é vinculado."}, fund:"Teoria dos motivos determinantes: a validade do ato administrativo está atrelada à existência e veracidade dos motivos declarados. Se os motivos forem falsos ou inexistentes, o ato é inválido — mesmo que a lei não exigisse motivação. Jurisprudência consolidada STF e STJ.", caqui:"Cargo em comissão = livre nomeação e exoneração. A Administração não era obrigada a explicar por que exonerou José. MAS ela explicou — e explicou algo falso. Aqui entra a teoria dos motivos determinantes: motivou = vinculou. Se o motivo é mentira, o ato cai. É como se você dissesse que demitiu porque o funcionário faltou, mas ele tem o ponto batido. A mentira invalida o ato."},
+  {num:4, exame:"XXIV Exame — 2017", titulo:"Poder de Polícia e Autoexecutoriedade — Interdição de Restaurante", enunciado:"Um fiscal de posturas municipais verificou que um restaurante continuava colocando mesas irregularmente na calçada. Após duas multas administrativas sem regularização, o fiscal interditou o estabelecimento e apreendeu as mesas e cadeiras, com fundamento na legislação de polícia administrativa.", comando:"Assinale a afirmativa correta.", gabarito:"C", alt:{"A": "O fiscal atuou com desvio de poder, pois o funcionamento do estabelecimento somente poderia ser restringido mediante provimento jurisdicional.", "B": "O ato autoexecutório é irregular porque não houve novo processo administrativo específico antes da apreensão.", "C": "O ato praticado está compatível com a polícia administrativa, que pode atuar de forma autoexecutória em situações extremas, observados razoabilidade e proporcionalidade.", "D": "A atuação é ilícita porque atos autoexecutórios exigem autorização judicial prévia."}, fb:{"A": "Incorreta. O poder de polícia pode restringir atividades privadas sem necessidade de provimento jurisdicional — é a autoexecutoriedade.", "B": "Incorreta. Já houve processo administrativo anterior (duas multas). O fiscal não precisava abrir novo procedimento antes de agir.", "C": "Correta! O poder de polícia tem o atributo da autoexecutoriedade: a Administração pode executar diretamente suas decisões, sem autorização judicial, especialmente em situações de reincidência e risco coletivo — desde que haja previsão legal e sejam observados razoabilidade e proporcionalidade.", "D": "Incorreta. Atos de polícia autoexecutórios NÃO exigem autorização judicial prévia — essa é exatamente a essência da autoexecutoriedade."}, fund:"Art. 78, CTN + doutrina: poder de polícia tem atributos de coercibilidade, autoexecutoriedade e discricionariedade (em regra). A autoexecutoriedade permite execução direta das decisões sem necessidade de ordem judicial, quando há previsão legal ou urgência.", caqui:"Autoexecutoriedade = a Administração age sozinha, sem pedir licença ao juiz. Aqui o restaurante já levou duas multas e continuou irregular — havia processo administrativo, havia reincidência, havia previsão legal. Interditar e apreender é poder de polícia autoexecutório. Não precisa de ordem judicial. A banca adora fazer o candidato pensar que precisa de juiz para tudo — não precisa."},
+  {num:5, exame:"XXIV Exame — 2017", titulo:"Poder Hierárquico e Dever de Obediência", enunciado:"João foi aprovado em concurso público promovido pelo Estado Alfa para o cargo de analista de políticas públicas. Apesar de receber ordens legais de seus superiores, João decidiu não cumpri-las, pois entendia que contrariavam o princípio da eficiência.", comando:"A partir do caso apresentado, assinale a afirmativa correta.", gabarito:"C", alt:{"A": "João possui total liberdade de atuação, não se submetendo a comandos superiores, em decorrência do princípio da eficiência.", "B": "A liberdade de atuação de João é pautada somente pelo princípio da legalidade, considerando que não existe escalonamento de competência na Administração Pública.", "C": "João tem dever de obediência às ordens legais de seus superiores, em razão da relação de subordinação decorrente do poder hierárquico.", "D": "As autoridades superiores somente podem realizar controle finalístico das atividades de João, em razão da relação de vinculação estabelecida com os superiores hierárquicos."}, fb:{"A": "Incorreta. O princípio da eficiência não elimina a hierarquia administrativa nem autoriza o servidor a descumprir ordens legais.", "B": "Incorreta. Existe escalonamento hierárquico na Administração Pública — é inerente à sua estrutura. E o fundamento do dever de obediência é o poder hierárquico, não só a legalidade.", "C": "Correta! Poder hierárquico: organiza a estrutura administrativa e gera dever de obediência às ordens legais dos superiores. João deve cumprir ordens legais, mesmo discordando. O único caso de recusa legítima é ordem manifestamente ilegal.", "D": "Incorreta. Controle finalístico (tutela administrativa) ocorre entre entidades distintas — como entre entes da Administração Indireta e o Ministério supervisor. Na relação hierárquica interna há subordinação direta, não controle finalístico."}, fund:"Poder hierárquico: decorre da estrutura vertical da Administração Pública. Gera dever de obediência às ordens legais dos superiores, possibilidade de delegação e avocação, revisão de atos e fiscalização. O servidor só pode recusar ordem manifestamente ilegal.", caqui:"Poder hierárquico gera duas obrigações básicas para o subordinado: cumprir ordens legais e não agir além de suas atribuições. João discordava das ordens por achar que eram ineficientes — mas ineficiente não é ilegal. Só ordem MANIFESTAMENTE ILEGAL pode ser recusada. A eficiência não dá ao servidor carta branca para ignorar a hierarquia."},
+  {num:6, exame:"XIV Exame — 2014", titulo:"Poder de Polícia e Limites da Autoexecutoriedade — Multa Ambiental", enunciado:"A Secretaria de Defesa do Meio Ambiente do Estado X lavrou auto de infração e aplicou multa de R$ 15.000,00 à empresa Explora pela instalação clandestina de esgoto em lagoa estadual. A empresa não apresentou impugnação nem efetuou pagamento.", comando:"Considerando o caso, assinale a afirmativa correta.", gabarito:"D", alt:{"A": "A aplicação da penalidade representa exercício do poder disciplinar e autoriza apreensão de bens para quitação da dívida, em razão da executoriedade do ato.", "B": "A aplicação da penalidade representa exercício do poder de polícia e autoriza apreensão de bens para quitação da dívida, em razão da executoriedade do ato.", "C": "A aplicação da penalidade representa exercício do poder disciplinar, mas não autoriza apreensão de bens para quitação da dívida.", "D": "A aplicação da penalidade representa exercício do poder de polícia, mas não autoriza apreensão de bens para quitação da dívida."}, fb:{"A": "Incorreta. Não é poder disciplinar — este incide sobre servidores e particulares com vínculo especial. A fiscalização ambiental sobre empresa é poder de polícia.", "B": "Incorreta. É poder de polícia — correto. Mas a apreensão de bens para forçar pagamento da multa é vedada. Súmula 323 do STF: é inadmissível a apreensão de mercadorias como meio coercitivo para pagamento de tributos (aplica-se analogicamente a multas administrativas).", "C": "Incorreta. Não é poder disciplinar — é poder de polícia.", "D": "Correta! A fiscalização ambiental e a multa são exercício do poder de polícia. Mas a Administração NÃO pode apreender bens para forçar o pagamento da multa. A cobrança deve ser feita por inscrição em dívida ativa e execução fiscal judicial."}, fund:"Art. 78, CTN: poder de polícia. Súmula 323, STF: inadmissível apreensão de mercadorias como meio coercitivo para pagamento de tributos. A executoriedade do poder de polícia tem limites — a cobrança do valor da multa não é autoexecutória: depende de execução fiscal.", caqui:"A banca cobra um limite clássico da autoexecutoriedade: a Administração pode multar (ato de polícia), pode embargar, pode interditar — mas NÃO pode tomar os bens da empresa para se pagar. Pegar bens para cobrar dívida precisa de execução judicial (execução fiscal). A Súmula 323 do STF fala de tributos, mas a jurisprudência estende para multas administrativas. Multa = poder de polícia. Cobrança forçada do valor = precisa de juiz."},
+  {num:7, exame:"XIII Exame — 2014", titulo:"Poder Hierárquico e Avocação", enunciado:"José da Silva é chefe do Departamento de Pessoal de uma Secretaria de Estado. Recentemente, José avocou a análise de determinada matéria constante de processo administrativo inicialmente distribuído a seu subordinado, João de Souza, por entender que a questão era complexa e não vinha sendo tratada com prioridade.", comando:"Ao agir dessa forma, José fez uso", gabarito:"A", alt:{"A": "Do poder hierárquico.", "B": "Do poder disciplinar.", "C": "Do poder discricionário.", "D": "Da teoria dos motivos determinantes."}, fb:{"A": "Correta! Avocar = chamar para si competência originalmente atribuída ao subordinado. A avocação é manifestação direta do poder hierárquico, que permite ao superior distribuir, fiscalizar, rever e avocar competências. Decorre da verticalização da estrutura administrativa.", "B": "Incorreta. Poder disciplinar envolve aplicação de sanções a servidores ou particulares com vínculo especial — não tem relação com redistribuição de competências.", "C": "Incorreta. Discricionariedade é a margem de escolha do administrador quanto à conveniência e oportunidade — não se confunde com a avocação.", "D": "Incorreta. Teoria dos motivos determinantes trata da vinculação da Administração aos motivos declarados do ato — não tem relação com avocação."}, fund:"Art. 15, Lei 9.784/99: a avocação é permitida ao superior hierárquico de forma temporária e por motivos relevantes. Decorre do poder hierárquico. Complemento: a delegação é o inverso — o superior transfere competência ao subordinado.", caqui:"Duas operações do poder hierárquico que a banca adora cobrar: DELEGAR = superior manda competência para baixo. AVOCAR = superior puxa competência de volta (ou toma para si o que estava com o subordinado). Aqui José puxou para cima = avocou = poder hierárquico. Simples e direto."},
+  {num:8, exame:"XI Exame — 2013", titulo:"Atributos do Poder de Polícia: Autoexecutoriedade", enunciado:"Atendendo a denúncias feitas por particulares, a Delegacia de Defesa do Consumidor (DECON) realizou fiscalização em restaurantes. Durante a operação: encontrou alimentos vencidos; apreendeu os produtos; interditou o estabelecimento; tudo sem autorização judicial prévia.", comando:"Assinale a alternativa que indica o atributo do poder de polícia que justifica as medidas adotadas.", gabarito:"C", alt:{"A": "Coercibilidade.", "B": "Inexigibilidade.", "C": "Autoexecutoriedade.", "D": "Discricionariedade."}, fb:{"A": "Incorreta. Coercibilidade significa que o administrado é obrigado a suportar a medida de polícia, mas o ponto central da questão é a execução DIRETA sem ordem judicial — que é a autoexecutoriedade.", "B": "Incorreta. Inexigibilidade não é atributo do poder de polícia — a expressão não existe nesse contexto.", "C": "Correta! Autoexecutoriedade: a Administração pode executar suas decisões diretamente, sem precisar de autorização judicial prévia. A apreensão de alimentos vencidos e a interdição do restaurante são executadas imediatamente — sem juiz.", "D": "Incorreta. Discricionariedade é a margem de escolha administrativa (conveniência e oportunidade) — não explica a execução direta sem juiz."}, fund:"Atributos do poder de polícia: (1) Discricionariedade — margem de escolha em regra; (2) Autoexecutoriedade — execução direta sem juiz; (3) Coercibilidade — imperatividade, obrigação de suportar a medida. O ponto diferencial: autoexecutoriedade = sem juiz.", caqui:"Os três atributos do poder de polícia que a banca cobra: DISCRICIONARIEDADE (escolhe como agir), AUTOEXECUTORIEDADE (age sem juiz) e COERCIBILIDADE (o particular é obrigado a suportar). Quando a questão fala em sem autorização judicial prévia, a resposta é sempre AUTOEXECUTORIEDADE. Essa é a palavra-chave. Sem juiz = autoexecutoriedade."},
+  {num:9, exame:"X Exame — 2013", titulo:"Poder de Polícia e Demolição Administrativa", enunciado:"Oscar iniciou a construção de um galpão sem licença municipal e utilizando material de baixa qualidade. A estrutura apresentava risco de desabamento sobre uma creche vizinha. Após fiscalização e notificação, a prefeitura demoliu a construção.", comando:"Assinale o instituto de Direito Administrativo que autoriza a atuação do Município.", gabarito:"B", alt:{"A": "Tombamento.", "B": "Poder de polícia.", "C": "Ocupação temporária.", "D": "Desapropriação."}, fb:{"A": "Incorreta. Tombamento é instrumento de proteção de patrimônio histórico, cultural ou ambiental — não serve para demolir construção irregular perigosa.", "B": "Correta! Poder de polícia: a Administração limita o uso da propriedade privada em prol da segurança coletiva. Construção irregular com risco de desabamento sobre uma creche justifica a demolição administrativa — ato autoexecutório do poder de polícia urbanístico.", "C": "Incorreta. Ocupação temporária é o uso transitório de bem particular pelo Poder Público para execução de obras ou serviços públicos — não tem relação com demolição de obra irregular.", "D": "Incorreta. Desapropriação transfere a propriedade do particular ao Poder Público, mediante indenização. Aqui o Município não adquiriu o imóvel — apenas demoliu a construção irregular."}, fund:"Art. 78, CTN: poder de polícia limita direitos e propriedade em prol do interesse coletivo. Poder de polícia urbanístico: inclui fiscalização de obras, embargo, demolição de construções irregulares ou perigosas — sem necessidade de ordem judicial quando há risco iminente.", caqui:"A banca adora confundir poder de polícia com desapropriação. A diferença é simples: desapropriação = o Estado toma o bem e paga (transfere a propriedade). Poder de polícia = o Estado limita o uso do bem (demoliu, embargou, multou) sem tomar a propriedade. Aqui a prefeitura demoliu — não comprou, não desapropriou. Poder de polícia urbanístico."},
+  {num:10, exame:"II Exame — 2010", titulo:"Limites do Poder Discricionário", enunciado:"No âmbito do poder discricionário da Administração Pública, não se admite que o agente público administrativo exerça o poder discricionário", comando:"Assinale a alternativa correta.", gabarito:"D", alt:{"A": "Quando estiver diante de conceitos legais e jurídicos parcialmente indeterminados, que se tornam determinados à luz do caso concreto e das circunstâncias de fato.", "B": "Quando estiver diante de conceitos legais e jurídicos técnico-científicos, sendo, neste caso, limitado às escolhas técnicas possíveis.", "C": "Quando estiver diante de conceitos valorativos estabelecidos pela lei, que dependem de concretização pelas escolhas do agente, considerados o momento histórico e social.", "D": "Em situações em que a redação da lei se encontra insatisfatória ou ultrapassada."}, fb:{"A": "Incorreta (há discricionariedade). Conceitos jurídicos indeterminados — como urgência, interesse público, perigo iminente — deixam ao administrador margem de concretização no caso concreto. Discricionariedade é cabível.", "B": "Incorreta (há discricionariedade limitada). Em conceitos técnico-científicos, o administrador pode escolher entre as alternativas técnicas possíveis. Há margem, embora restrita.", "C": "Incorreta (há discricionariedade). Conceitos valorativos como boa-fé, razoável, proporcional dependem de concretização pelo agente conforme o contexto histórico e social. Admite-se discricionariedade.", "D": "Correta! O administrador está vinculado ao princípio da legalidade (art. 37, CF). Se a lei é ruim, antiga ou insatisfatória, isso NÃO autoriza o agente a ignorá-la ou agir fora de seus limites. A alteração da lei é competência do Legislativo. O agente executa a lei — não a corrige por vontade própria."}, fund:"Art. 37, CF: princípio da legalidade — o administrador só pode fazer o que a lei autoriza. Poder discricionário: margem de escolha dentro da lei (conveniência e oportunidade). Limite: o administrador não pode substituir a lei, mesmo que a considere ultrapassada.", caqui:"Poder discricionário não é carta branca — é escolha dentro da lei. O administrador pode ter margem para interpretar conceitos vagos (urgência, interesse público), mas NÃO pode simplesmente ignorar a lei porque acha ela ruim ou ultrapassada. Lei ruim = problema do Legislativo, não desculpa para o administrador agir fora dela. Se a alternativa disser que o administrador pode agir contra a lei por considerá-la insatisfatória — está errada."},
+  {num:11, exame:"II Exame — 2010", titulo:"Poder-Dever da Administração e Poder Hierárquico", enunciado:"A doutrina afirma que certas prerrogativas da Administração Pública constituem verdadeiros poderes-deveres, irrenunciáveis e exercidos sempre que o interesse público exigir.", comando:"A esse respeito, assinale a afirmativa correta.", gabarito:"D", alt:{"A": "O poder regulamentar é amplo e permite, sem controvérsias, a edição de regulamentos autônomos e executórios.", "B": "O poder disciplinar importa à Administração o dever de apurar infrações e aplicar penalidades, mesmo sem legislação prévia.", "C": "O poder de polícia é discricionário, conferindo ao administrador ilimitada margem de opções quanto à sanção a ser aplicada.", "D": "O poder hierárquico é inerente à verticalização administrativa e revela possibilidades de controlar atividades, delegar competência, avocar competências delegáveis e invalidar atos, dentre outros."}, fb:{"A": "Incorreta. Regulamentos autônomos são exceção constitucional restrita (art. 84, VI, CF — somente para organização e funcionamento da Administração e extinção de cargos vagos). Afirmar que são admitidos sem controvérsias é errado.", "B": "Incorreta. Princípio da legalidade: ninguém pode ser punido sem previsão legal. O poder disciplinar pressupõe legislação prévia definindo as infrações e sanções.", "C": "Incorreta. O poder de polícia é discricionário em regra — mas não confere margem ILIMITADA. A atuação deve observar legalidade, proporcionalidade e razoabilidade.", "D": "Correta! Poder hierárquico: organiza a estrutura vertical da Administração. Permite controlar atividades dos subordinados, delegar competências, avocar atribuições e invalidar atos dos subordinados. É o poder de coordenação interna."}, fund:"Poder hierárquico: decorre da verticalização da Administração. Permite delegar, avocar, fiscalizar, rever e invalidar atos dos subordinados. Poder regulamentar autônomo: restrito ao art. 84, VI, CF. Poder disciplinar: pressupõe previsão legal. Poder de polícia: discricionário, mas não ilimitado.", caqui:"Essa questão testa quatro poderes de uma vez. A banca usa expressões absolutas para marcar as erradas: sem controvérsias (A = errado), mesmo sem legislação prévia (B = errado), ilimitada margem (C = errado). Em Direito Administrativo, expressão absoluta geralmente = alternativa errada. A correta é a D: poder hierárquico = organizar, controlar, delegar e avocar. Isso é pacífico na doutrina."},
+];
+
+let current=0;
+const estado=Array(QUESTOES.length).fill(null);
+
+function init(){
+  const nav=document.getElementById('nav-wrap');
+  const cont=document.getElementById('questions-container');
+  QUESTOES.forEach((q,i)=>{
+    const nb=document.createElement('button');
+    nb.className='nav-btn'+(i===0?' active':'');
+    nb.textContent=i+1;nb.onclick=()=>goTo(i);nb.id='nav-'+i;
+    nav.appendChild(nb);
+    const card=document.createElement('div');
+    card.className='q-card'+(i===0?' visible':'');card.id='card-'+i;
+    card.innerHTML=buildCard(q,i);cont.appendChild(card);
+  });
+  updatePagination();updateScore();
+}
+
+function buildCard(q,i){
+  const alts=Object.entries(q.alt).map(([l,t])=>`<button class="alt-btn" onclick="responder(${i},'${l}',this)" data-letra="${l}"><span class="alt-letter">${l}</span><span class="alt-text">${t}</span></button>`).join('');
+  return `<div class="q-header"><span class="q-num">Questão ${q.num}</span>${q.exame?`<span class="q-exame">${q.exame}</span>`:''}</div>
+    <h2 class="q-titulo">${q.titulo}</h2>
+    <div class="enunciado">${q.enunciado}</div>
+    <p class="comando">${q.comando}</p>
+    <div class="alternativas" id="alts-${i}">${alts}</div>
+    <div class="feedback" id="fb-${i}"></div>
+    <div class="fundamento-box" id="fund-${i}"><h4>📖 Fundamento legal</h4>${q.fund}</div>
+    <div class="caqui-box" id="caqui-${i}"><h4>🍊 Explicação didática do Professor Caqui</h4>${q.caqui}</div>
+    <div class="card-actions"><div class="btn-group">
+      <button class="btn azul" id="btn-fund-${i}" onclick="toggleFund(${i})">Ver fundamento legal</button>
+      <button class="btn caqui" id="btn-caqui-${i}" onclick="toggleCaqui(${i})">Explicação do Prof. Caqui</button>
+      <button class="btn" id="btn-reset-${i}" onclick="resetQ(${i})">↺ Tentar novamente</button>
+    </div><span class="status-text" id="status-${i}"></span></div>`;
+}
+
+function responder(idx,letra,btn){
+  if(estado[idx]!==null)return;
+  estado[idx]=letra;
+  const q=QUESTOES[idx];
+  document.querySelectorAll(`#alts-${idx} .alt-btn`).forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.letra===q.gabarito)b.classList.add('correct');
+    if(b.dataset.letra===letra&&letra!==q.gabarito)b.classList.add('wrong');
+  });
+  const acertou=letra===q.gabarito;
+  const fb=document.getElementById('fb-'+idx);
+  fb.className='feedback show '+(acertou?'acerto':'erro');
+  fb.innerHTML=`<strong>${acertou?'✓ Correta!':'✗ Incorreta.'}</strong> ${q.fb[letra]}`;
+  document.getElementById('status-'+idx).textContent=acertou?'Acerto!':'Gabarito: '+q.gabarito;
+  document.getElementById('btn-reset-'+idx).className='btn show';
+  document.getElementById('btn-fund-'+idx).className='btn azul show';
+  document.getElementById('btn-caqui-'+idx).className='btn caqui show';
+  const navBtn=document.getElementById('nav-'+idx);
+  navBtn.classList.remove('active');navBtn.classList.add(acertou?'correto':'errado');
+  if(idx===current)navBtn.classList.add('active');
+  updateScore();
+}
+
+function toggleFund(idx){
+  const box=document.getElementById('fund-'+idx);
+  const btn=document.getElementById('btn-fund-'+idx);
+  const v=box.classList.contains('show');
+  box.className=v?'fundamento-box':'fundamento-box show';
+  btn.textContent=v?'Ver fundamento legal':'Ocultar fundamento';
+}
+
+function toggleCaqui(idx){
+  const box=document.getElementById('caqui-'+idx);
+  const btn=document.getElementById('btn-caqui-'+idx);
+  const v=box.classList.contains('show');
+  box.className=v?'caqui-box':'caqui-box show';
+  btn.textContent=v?'Explicação do Prof. Caqui':'Ocultar explicação';
+}
+
+function resetQ(idx){
+  estado[idx]=null;
+  document.querySelectorAll(`#alts-${idx} .alt-btn`).forEach(b=>{b.disabled=false;b.className='alt-btn';});
+  document.getElementById('fb-'+idx).className='feedback';
+  document.getElementById('fund-'+idx).className='fundamento-box';
+  document.getElementById('btn-fund-'+idx).className='btn azul';
+  document.getElementById('btn-fund-'+idx).textContent='Ver fundamento legal';
+  document.getElementById('caqui-'+idx).className='caqui-box';
+  document.getElementById('btn-caqui-'+idx).className='btn caqui';
+  document.getElementById('btn-caqui-'+idx).textContent='Explicação do Prof. Caqui';
+  document.getElementById('btn-reset-'+idx).className='btn';
+  document.getElementById('status-'+idx).textContent='';
+  document.getElementById('nav-'+idx).className='nav-btn'+(idx===current?' active':'');
+  updateScore();
+}
+
+function goTo(idx){
+  document.getElementById('card-'+current).classList.remove('visible');
+  document.getElementById('nav-'+current).classList.remove('active');
+  current=idx;
+  document.getElementById('card-'+current).classList.add('visible');
+  document.getElementById('nav-'+current).classList.add('active');
+  updatePagination();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function navPage(dir){const next=current+dir;if(next>=0&&next<QUESTOES.length)goTo(next);}
+
+function updatePagination(){
+  document.getElementById('pg-info').textContent=(current+1)+' de '+QUESTOES.length;
+  document.getElementById('btn-prev').disabled=current===0;
+  document.getElementById('btn-next').disabled=current===QUESTOES.length-1;
+}
+
+function updateScore(){
+  const respondidas=estado.filter(e=>e!==null).length;
+  const acertos=estado.filter((e,i)=>e===QUESTOES[i].gabarito).length;
+  const erros=respondidas-acertos;
+  document.getElementById('sc-total').textContent=respondidas;
+  document.getElementById('sc-acertos').textContent=acertos;
+  document.getElementById('sc-erros').textContent=erros;
+  const pct=Math.round((respondidas/QUESTOES.length)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=respondidas+' de '+QUESTOES.length+' respondidas';
+}
+
+init();
+</script>
+</body>
+</html>
